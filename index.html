@@ -1,4 +1,5 @@
 <title>Harbuck Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
 <style>
@@ -37,7 +38,9 @@
   .mono{ font-family:'Spline Sans Mono', 'Courier New', monospace; }
 
   a{ color:inherit; text-decoration:none; }
-  a:focus-visible, button:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
+  a:focus-visible, button:focus-visible, .flip:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
+
+  img,svg{ max-width:100%; }
 
   .wrap{ max-width:1120px; margin:0 auto; padding:0 28px; }
 
@@ -67,9 +70,9 @@
     max-width:1120px; margin:0 auto; padding:18px 28px;
     display:flex; align-items:center; justify-content:space-between; gap:24px;
   }
-  .wordmark{ display:flex; align-items:baseline; gap:10px; }
-  .wordmark .hg{ font-family:'Instrument Serif', Georgia, serif; font-size:21px; letter-spacing:.01em; color:var(--text); }
-  .wordmark .est{ font-family:'Spline Sans Mono', monospace; font-size:10px; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; }
+  .wordmark{ display:flex; align-items:baseline; gap:10px; min-width:0; }
+  .wordmark .hg{ font-family:'Instrument Serif', Georgia, serif; font-size:21px; letter-spacing:.01em; color:var(--text); white-space:nowrap; }
+  .wordmark .est{ font-family:'Spline Sans Mono', monospace; font-size:10px; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; white-space:nowrap; }
   .wordmark .est::before{ content:"// "; opacity:.6; }
   .nav-links{ display:flex; gap:30px; align-items:center; }
   .nav-links a{ font-size:13px; color:var(--muted); letter-spacing:.02em; transition:color .25s; }
@@ -104,7 +107,7 @@
   }
   .spec-line b{ color:var(--gold); font-weight:500; }
   .hero h1{
-    font-size:clamp(42px, 6.6vw, 84px);
+    font-size:clamp(38px, 6.6vw, 84px);
     line-height:1.05; letter-spacing:-.012em; max-width:15ch;
   }
   .hero h1 em{ font-style:italic; color:var(--gold-hi); }
@@ -130,18 +133,23 @@
     color:var(--gold); border:1px solid var(--line-strong); padding:6px 13px; margin-bottom:26px;
   }
   .sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-bottom:58px; flex-wrap:wrap; }
-  .sec-head h2{ font-size:clamp(32px, 4vw, 52px); line-height:1.1; letter-spacing:-.01em; max-width:20ch; }
+  .sec-head h2{ font-size:clamp(30px, 4vw, 52px); line-height:1.1; letter-spacing:-.01em; max-width:20ch; }
   .sec-head h2 em{ font-style:italic; color:var(--gold-hi); }
   .sec-head .side{ max-width:38ch; color:var(--muted); font-size:15px; padding-bottom:6px; font-family:'Spline Sans Mono',monospace; }
 
-  /* ============ Flip cards (bordered node style) ============ */
+  /* ============ Flip cards (bordered node style) — hover triggered ============ */
   .cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1px; background:var(--line-strong); border:1px solid var(--line-strong); perspective:1600px; }
-  .flip{ position:relative; height:320px; }
+  .flip{ position:relative; height:300px; cursor:pointer; }
   .flip-inner{
     position:absolute; inset:0;
     transform-style:preserve-3d;
-    transition:transform 1.05s var(--ease);
+    transition:transform .85s var(--ease);
   }
+  /* Hover flip — pointer/mouse devices only */
+  @media (hover:hover) and (pointer:fine){
+    .flip:hover .flip-inner, .flip:focus-visible .flip-inner{ transform:rotateY(180deg); }
+  }
+  /* Tap-to-flip fallback for touch — toggled via JS */
   .flip.flipped .flip-inner{ transform:rotateY(180deg); }
   .face{
     position:absolute; inset:0;
@@ -150,10 +158,14 @@
     display:flex; flex-direction:column;
   }
   .face.front{
-    background:var(--ink); align-items:flex-start; justify-content:flex-end; padding:26px;
+    background:var(--ink); align-items:flex-start; justify-content:flex-end; padding:26px; position:relative;
   }
-  .face.front .sigil{ font-family:'Instrument Serif', serif; font-style:italic; font-size:15px; color:var(--gold); }
-  .face.front .hint{ font-family:'Spline Sans Mono', monospace; font-size:10px; letter-spacing:.28em; color:var(--faint); text-transform:uppercase; margin-top:10px; }
+  .face.front .num{ font-family:'Spline Sans Mono', monospace; font-size:11px; color:var(--gold); letter-spacing:.14em; }
+  .face.front h3{ font-size:25px; margin-top:12px; line-height:1.15; }
+  .face.front .hint{ font-family:'Spline Sans Mono', monospace; font-size:10px; letter-spacing:.2em; color:var(--faint); text-transform:uppercase; margin-top:14px; display:flex; align-items:center; gap:6px; }
+  .face.front .hint .arrow{ transition:transform .3s var(--ease); }
+  .flip:hover .face.front .hint .arrow{ transform:translateX(3px); }
+  .face.front .pill{ position:absolute; top:22px; right:22px; }
   .face.back{
     transform:rotateY(180deg);
     background:var(--surface-2);
@@ -162,7 +174,6 @@
   }
   .flip:hover .face.back{ background:var(--surface); }
   .face.back .num{ font-family:'Spline Sans Mono', monospace; font-size:11px; color:var(--gold); letter-spacing:.14em; }
-  .face.back h3{ font-size:24px; margin-top:14px; line-height:1.2; }
   .face.back p{ margin-top:12px; font-size:13.5px; color:var(--muted); line-height:1.65; }
   .face.back .tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
   .tag{
@@ -170,7 +181,7 @@
     color:var(--gold); border:1px solid var(--line-strong); padding:4px 10px;
   }
 
-  /* ============ Custom work ============ */
+  /* ============ Custom work / portfolio cards ============ */
   .custom-note{
     border:1px solid var(--line-strong);
     background:linear-gradient(180deg, rgba(200,169,106,.05), transparent 55%);
@@ -180,17 +191,9 @@
   .custom-note h3{ font-size:clamp(22px,3vw,32px); max-width:26ch; line-height:1.25; }
   .custom-note h3 em{ font-style:italic; color:var(--gold-hi); }
   .custom-note p{ margin-top:16px; color:var(--muted); max-width:64ch; font-size:15px; }
-  .work{ display:flex; flex-direction:column; border:1px solid var(--line-strong); border-top:none; }
-  .work-row{
-    display:grid; grid-template-columns:170px 1fr auto; gap:28px; align-items:baseline;
-    padding:30px 24px; border-top:1px solid var(--line-strong);
-    transition:background .3s;
-  }
-  .work-row:hover{ background:var(--surface-2); }
-  .work-row .cat{ font-family:'Spline Sans Mono', monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); }
-  .work-row .name{ font-family:'Instrument Serif', serif; font-size:26px; color:var(--text); }
-  .work-row .desc{ font-size:13.5px; color:var(--muted); margin-top:6px; max-width:60ch; }
-  .work-row .state{ font-family:'Spline Sans Mono', monospace; font-size:10.5px; color:var(--gold); letter-spacing:.1em; white-space:nowrap; border:1px solid var(--line-strong); padding:5px 10px; height:fit-content; }
+  .work-cards{ grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); }
+  .work-cards .flip{ height:340px; }
+  .work-cards .face.back p{ font-size:14px; }
 
   /* ============ Process ============ */
   .steps{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1px; background:var(--line-strong); border:1px solid var(--line-strong); }
@@ -211,7 +214,7 @@
   .term-bar{ display:flex; gap:7px; padding:20px 26px; border-bottom:1px solid var(--line-strong); }
   .term-bar span{ width:9px; height:9px; border-radius:50%; background:var(--line-strong); }
   .contact-in{ padding:clamp(40px, 6vw, 78px); text-align:center; }
-  .contact-box h2{ font-size:clamp(34px, 4.6vw, 60px); line-height:1.08; }
+  .contact-box h2{ font-size:clamp(32px, 4.6vw, 60px); line-height:1.08; }
   .contact-box h2 em{ font-style:italic; color:var(--gold-hi); }
   .contact-box > .contact-in > p{ margin:20px auto 0; max-width:46ch; color:var(--muted); font-size:15.5px; }
   .contact-form{
@@ -230,7 +233,7 @@
   }
   .contact-form .row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   .form-foot{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:8px; }
-  .email-line{ display:inline-flex; align-items:center; gap:10px; font-family:'Spline Sans Mono', monospace; font-size:13px; color:var(--muted); }
+  .email-line{ display:inline-flex; align-items:center; gap:10px; font-family:'Spline Sans Mono', monospace; font-size:13px; color:var(--muted); flex-wrap:wrap; }
   .copy-btn{
     background:none; border:1px solid var(--line-strong); border-radius:3px; color:var(--gold);
     font-family:'Spline Sans Mono', monospace; font-size:10.5px; letter-spacing:.08em;
@@ -242,21 +245,64 @@
   .foot-in{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
   .foot-in .small{ font-family:'Spline Sans Mono',monospace; font-size:11.5px; color:var(--faint); }
 
-  @media (max-width:760px){
-    .nav-links a:not(.btn){ display:none; }
-    .readout{ grid-template-columns:1fr; }
-    .work-row{ grid-template-columns:1fr; gap:8px; }
-    .work-row .state{ order:-1; width:fit-content; }
-    .contact-form .row2{ grid-template-columns:1fr; }
-    section{ padding:80px 0; }
-    .hero .wrap > .frame{ padding:30px 22px; }
+  /* ============ Mobile / responsive pass ============ */
+  @media (max-width:900px){
+    .wrap{ padding:0 22px; }
+    .cards{ grid-template-columns:repeat(2, 1fr); }
   }
+
+  @media (max-width:760px){
+    .nav-in{ padding:14px 20px; }
+    .nav-links{ gap:12px; }
+    .nav-links a:not(.btn){ display:none; }
+    .wordmark .est{ display:none; }
+    .btn{ padding:9px 14px; font-size:11.5px; }
+    header.hero{ padding:110px 0 60px; min-height:auto; }
+    .hero .wrap > .frame{ padding:26px 20px; }
+    .hero-cta{ flex-direction:column; align-items:stretch; }
+    .hero-cta .btn{ justify-content:center; }
+    .readout{ grid-template-columns:1fr; }
+    section{ padding:70px 0; }
+    .sec-head{ gap:16px; margin-bottom:40px; }
+    .cards{ grid-template-columns:1fr; }
+    .flip{ height:auto; min-height:220px; }
+    .face{ position:relative; }
+    .face.front{ padding:22px; }
+    .face.back{ padding:22px; }
+    .work-cards .flip{ min-height:260px; }
+    .custom-note{ padding:28px 22px; }
+    .contact-in{ padding:40px 22px; }
+    .contact-form .row2{ grid-template-columns:1fr; }
+    .foot-in{ flex-direction:column; align-items:flex-start; gap:8px; }
+  }
+
+  @media (max-width:760px) and (hover:none){
+    /* On touch devices the card height can't rely on absolute-positioned faces
+       (no hover state to reveal), so faces stack instead of overlapping. */
+    .flip .flip-inner{ position:relative; height:auto; }
+    .face{ position:relative; inset:auto; backface-visibility:visible; }
+    .face.back{ transform:none; border-top:1px solid var(--line-strong); }
+    .flip.flipped .face.back{ display:flex; }
+    .face.back{ display:none; }
+    .flip.flipped .flip-inner{ transform:none; }
+    .face.front .hint::after{ content:"(tap to view)"; margin-left:2px; }
+  }
+
+  @media (max-width:480px){
+    .hero h1{ font-size:clamp(32px, 9vw, 44px); }
+    .spec-line{ font-size:10px; letter-spacing:.14em; }
+    .sec-tab{ font-size:10px; padding:5px 10px; }
+    .term-bar{ padding:16px 18px; }
+    .email-line{ font-size:11.5px; }
+    .form-foot{ flex-direction:column; align-items:stretch; }
+    .form-foot .btn{ justify-content:center; }
+  }
+
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     .rv{ opacity:1; transform:none; transition:none; }
     .flip-inner{ transition:none; }
-    .flip .flip-inner{ transform:rotateY(180deg); }
-    .btn, .step, .work-row{ transition:none; }
+    .btn, .step{ transition:none; }
   }
 </style>
 
@@ -270,7 +316,7 @@
       <a href="#build">Capabilities</a>
       <a href="#work">Work</a>
       <a href="#process">Process</a>
-      <a href="#contact" class="btn">Start a project <span class="arrow">→</span></a>
+      <a href="#contact" class="btn">Talk to Sales <span class="arrow">→</span></a>
     </div>
   </div>
 </nav>
@@ -283,7 +329,7 @@
       <h1>Software built for <em>one</em> business. Yours.</h1>
       <p class="lede">Harbuck Group designs and builds the tools your business actually runs on — web platforms, iOS apps, and internal systems. Nothing off a shelf, nothing assembled from templates. One person answers your email, and the same person writes the code.</p>
       <div class="hero-cta">
-        <a class="btn btn-solid" href="#contact">Tell me what you need <span class="arrow">→</span></a>
+        <a class="btn btn-solid" href="#contact">Talk to Sales <span class="arrow">→</span></a>
         <a class="btn" href="#work">See the work</a>
       </div>
       <div class="readout">
@@ -300,37 +346,53 @@
     <div class="sec-tab rv">SEC. 01 — FIELDS</div>
     <div class="sec-head rv">
       <h2>What gets <em>built</em> here</h2>
-      <p class="side">FOUR DISCIPLINES · ONE STANDARD</p>
+      <p class="side">FOUR DISCIPLINES · ONE STANDARD · HOVER A CARD</p>
     </div>
     <div class="cards">
-      <div class="flip rv"><div class="flip-inner">
-        <div class="face front"><div class="sigil">I.</div><div class="hint">Revealed on scroll</div></div>
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <div class="num">FIELD — 01</div>
+          <h3>Web platforms</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
         <div class="face back">
-          <div><span class="num">FIELD — 01</span><h3>Web platforms</h3>
+          <div><span class="num">FIELD — 01</span>
           <p>Full products in the browser: marketplaces, dashboards, client portals, booking systems. Fast, secure, and built around how your customers actually behave.</p></div>
           <div class="tags"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Postgres</span></div>
         </div>
       </div></div>
-      <div class="flip rv"><div class="flip-inner">
-        <div class="face front"><div class="sigil">II.</div><div class="hint">Revealed on scroll</div></div>
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <div class="num">FIELD — 02</div>
+          <h3>iOS apps</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
         <div class="face back">
-          <div><span class="num">FIELD — 02</span><h3>iOS apps</h3>
+          <div><span class="num">FIELD — 02</span>
           <p>Native apps that live on your customers' phones — from the App Store listing to the onboarding flow to the server behind it, handled end to end.</p></div>
           <div class="tags"><span class="tag">Swift</span><span class="tag">App Store</span><span class="tag">Push</span></div>
         </div>
       </div></div>
-      <div class="flip rv"><div class="flip-inner">
-        <div class="face front"><div class="sigil">III.</div><div class="hint">Revealed on scroll</div></div>
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <div class="num">FIELD — 03</div>
+          <h3>Internal systems</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
         <div class="face back">
-          <div><span class="num">FIELD — 03</span><h3>Internal systems</h3>
+          <div><span class="num">FIELD — 03</span>
           <p>The unglamorous software that makes a business run: CRMs, inventory, quoting, operations tools — shaped to your process instead of forcing you into someone else's.</p></div>
           <div class="tags"><span class="tag">CRM</span><span class="tag">Workflows</span><span class="tag">Reporting</span></div>
         </div>
       </div></div>
-      <div class="flip rv"><div class="flip-inner">
-        <div class="face front"><div class="sigil">IV.</div><div class="hint">Revealed on scroll</div></div>
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <div class="num">FIELD — 04</div>
+          <h3>Automation &amp; AI</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
         <div class="face back">
-          <div><span class="num">FIELD — 04</span><h3>Automation &amp; AI</h3>
+          <div><span class="num">FIELD — 04</span>
           <p>The repetitive work your team does by hand — quoting, follow-ups, data entry, triage — done by software, with modern AI applied where it genuinely earns its keep.</p></div>
           <div class="tags"><span class="tag">Pipelines</span><span class="tag">LLMs</span><span class="tag">Integrations</span></div>
         </div>
@@ -347,22 +409,46 @@
       <h3>Every project here is <em>custom.</em></h3>
       <p>Off-the-shelf software makes you adapt to it. Custom software adapts to you — your pricing, your process, your customers. Each build below started as a blank repository and a conversation about how one specific business works.</p>
     </div>
-    <div class="work">
-      <div class="work-row rv">
-        <div class="cat">Consumer iOS + Web</div>
-        <div><div class="name">Allacart</div><div class="desc">A cross-store shopping cart that follows you across retailers — Chrome and Safari extensions, a native iOS app, and a real-time backend, built and shipped to the App Store.</div></div>
-        <div class="state">LIVE</div>
-      </div>
-      <div class="work-row rv">
-        <div class="cat">B2B Marketplace</div>
-        <div><div class="name">Sealed-Bid Platform</div><div class="desc">A private auction platform for equipment resellers: buyers get a link, bid on lots, and the system awards winners automatically. No brokers, no commissions, fully owned by the operator.</div></div>
-        <div class="state">IN USE</div>
-      </div>
-      <div class="work-row rv">
-        <div class="cat">Internal Ops</div>
-        <div><div class="name">Outreach CRM</div><div class="desc">A ground-up CRM for a single-operator sales pipeline — lead discovery, AI-checked drafting, and compliance guardrails baked into the send path itself.</div></div>
-        <div class="state">IN USE</div>
-      </div>
+    <div class="cards work-cards">
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <span class="tag pill">LIVE</span>
+          <div class="num">Consumer iOS + Web</div>
+          <h3>Allacart</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
+        <div class="face back">
+          <div><span class="num">Consumer iOS + Web</span>
+          <p>A cross-store shopping cart that follows you across retailers — Chrome and Safari extensions, a native iOS app, and a real-time backend, built and shipped to the App Store.</p></div>
+          <div class="tags"><span class="tag">LIVE</span></div>
+        </div>
+      </div></div>
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <span class="tag pill">IN USE</span>
+          <div class="num">B2B Marketplace</div>
+          <h3>Sealed-Bid Platform</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
+        <div class="face back">
+          <div><span class="num">B2B Marketplace</span>
+          <p>A private auction platform for equipment resellers: buyers get a link, bid on lots, and the system awards winners automatically. No brokers, no commissions, fully owned by the operator.</p></div>
+          <div class="tags"><span class="tag">IN USE</span></div>
+        </div>
+      </div></div>
+      <div class="flip rv" tabindex="0"><div class="flip-inner">
+        <div class="face front">
+          <span class="tag pill">IN USE</span>
+          <div class="num">Internal Ops</div>
+          <h3>Outreach CRM</h3>
+          <div class="hint">Hover to view <span class="arrow">→</span></div>
+        </div>
+        <div class="face back">
+          <div><span class="num">Internal Ops</span>
+          <p>A ground-up CRM for a single-operator sales pipeline — lead discovery, AI-checked drafting, and compliance guardrails baked into the send path itself.</p></div>
+          <div class="tags"><span class="tag">IN USE</span></div>
+        </div>
+      </div></div>
     </div>
   </div>
 </section>
@@ -435,26 +521,57 @@
   }, {threshold:.15, rootMargin:'0px 0px -40px 0px'});
   document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
 
-  if (!reduced) {
-    const flips = [...document.querySelectorAll('.flip')];
-    const flipObs = new IntersectionObserver(entries => {
-      for (const e of entries) if (e.isIntersecting) {
-        const el = e.target;
-        setTimeout(() => el.classList.add('flipped'), 350 + flips.indexOf(el) * 160);
-        flipObs.unobserve(el);
+  // Flip cards: hover handles this on mouse/trackpad devices via CSS.
+  // Touch devices get a tap-to-flip toggle instead, since :hover doesn't fire reliably there.
+  const hoverCapable = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  document.querySelectorAll('.flip').forEach(el => {
+    el.addEventListener('click', () => {
+      if (!hoverCapable) el.classList.toggle('flipped');
+    });
+    el.addEventListener('keydown', ev => {
+      if ((ev.key === 'Enter' || ev.key === ' ') && !hoverCapable) {
+        ev.preventDefault();
+        el.classList.toggle('flipped');
       }
-    }, {threshold:.45});
-    flips.forEach(el => flipObs.observe(el));
-  }
+    });
+  });
 
-  document.getElementById('mailform').addEventListener('submit', ev => {
+  document.getElementById('mailform').addEventListener('submit', async ev => {
     ev.preventDefault();
+    const form = ev.currentTarget;
+    const btn  = form.querySelector('button[type="submit"]');
     const name = document.getElementById('f-name').value.trim();
     const biz  = document.getElementById('f-biz').value.trim();
     const msg  = document.getElementById('f-msg').value.trim();
-    const subject = encodeURIComponent(`Project inquiry${biz ? ' — ' + biz : ''}`);
-    const body = encodeURIComponent(`${msg}\n\n— ${name}${biz ? ', ' + biz : ''}`);
-    location.href = `mailto:nick@harbuckgroup.com?subject=${subject}&body=${body}`;
+    const original = btn.innerHTML;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: '3164bd66-b603-40f3-a526-9420f3020940',
+          subject: `Project inquiry${biz ? ' — ' + biz : ''}`,
+          from_name: name || 'Website visitor',
+          name,
+          business: biz,
+          message: msg
+        })
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Send failed');
+
+      btn.textContent = 'Sent';
+      form.reset();
+      setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 2500);
+    } catch (err) {
+      btn.innerHTML = original;
+      btn.disabled = false;
+      alert('Sorry — that didn\'t send. Please email nick@harbuckgroup.com directly and I\'ll get right back to you.');
+    }
   });
 
   const copyBtn = document.getElementById('copyEmail');
