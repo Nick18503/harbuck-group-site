@@ -48,10 +48,10 @@ nav{border-bottom:1px solid var(--line-strong);background:rgba(13,12,10,.9);posi
 .nav-links a:hover{color:var(--gold-hi)}
 
 header.hero{position:relative;padding:100px 0 30px;border-bottom:1px solid var(--line-strong)}
-.bracket{position:relative;border:1px solid var(--line-strong);padding:48px 44px;background:linear-gradient(160deg,rgba(200,169,106,.05),transparent 60%)}
-.bracket::before,.bracket::after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--gold);opacity:.7}
-.bracket::before{top:-2px;left:-2px;border-right:none;border-bottom:none}
-.bracket::after{bottom:-2px;right:-2px;border-left:none;border-top:none}
+.hero-copy{position:relative}
+.hero-logo{height:100px;width:auto;display:block;margin-bottom:28px}
+.nav-mark{height:30px;width:auto;display:block}
+.footer-mark{height:19px;width:auto;vertical-align:-5px;margin-right:3px}
 .spec-line{font-size:11px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase;margin-bottom:22px}
 .spec-line b{color:var(--gold)}
 .hero h1{font-family:'Instrument Sans',sans-serif;font-weight:500;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.01em;max-width:16ch}
@@ -459,6 +459,7 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
 @media (max-width:1200px) and (min-width:901px){:root{--card-w:392px;--card-h:280px}}
 @media (max-width:900px){
   .schem{grid-template-columns:1fr 1fr}
+  .hero-logo{height:64px;margin-bottom:20px}
   .hscroll-wrap{height:auto!important}
   .hscroll-pin{position:static!important;height:auto!important;overflow:visible!important}
   .hscroll-track{display:block!important;width:auto!important;height:auto!important;transform:none!important}
@@ -496,13 +497,14 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
 <body>
 
 <nav><div class="nav-in">
-  <span class="tag">HARBUCK_GROUP</span>
+  <a href="#top" aria-label="Harbuck Group, home"><img class="nav-mark" src="images/logo-mark.png" alt="Harbuck Group"></a>
   <div class="nav-links"><a href="#caps">capabilities</a><a href="#terms">terms</a><a href="#process">process</a><a href="#contact">contact</a></div>
 </div></nav>
 
-<header class="hero">
+<header class="hero" id="top">
   <div class="wrap">
-    <div class="bracket">
+    <div class="hero-copy">
+      <img class="hero-logo" src="images/logo-mark.png" alt="Harbuck Group">
       <div class="spec-line">DOC. 001 <b>/</b> CUSTOM SOFTWARE &amp; WEB DESIGN <b>/</b> ATLANTA, GA</div>
       <h1>Software built for <span class="em">one</span> business. Yours.</h1>
       <p class="prose">Harbuck Group designs and builds the tools your business runs on. Web platforms, iOS apps, and internal systems, specified around how you actually work.</p>
@@ -576,7 +578,7 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
   </div>
 </div></section>
 
-<footer>HARBUCK_GROUP · <a href="tel:+17068703910">(706) 870-3910</a> · <a href="mailto:nick@harbuckgroup.com">nick@harbuckgroup.com</a> · © 2026</footer>
+<footer><img class="footer-mark" src="images/logo-footer.png" alt="Harbuck Group"> · <a href="tel:+17068703910">(706) 870-3910</a> · <a href="mailto:nick@harbuckgroup.com">nick@harbuckgroup.com</a> · © 2026</footer>
 
 <div class="scanbar" id="scanbar"></div>
 <div class="backdrop" id="backdrop"></div>
@@ -1051,6 +1053,11 @@ if(form){form.addEventListener('submit',async e=>{
   if(form.querySelector('.hp').checked)return;
   fsend.disabled=true;fstate.className='fstate';fstate.textContent='Sending.';
   try{
+    /* FormData, not JSON: a JSON body forces a CORS preflight (OPTIONS),
+       and Web3Forms's plan tier rejects that preflight with a 403 before
+       the real POST ever goes out. FormData with no manual Content-Type
+       header is a CORS "simple request" and skips the preflight entirely,
+       which is why Web3Forms's own docs use it instead of JSON. */
     const fd=new FormData();
     fd.append('access_key','3164bd66-b603-40f3-a526-9420f3020940');
     fd.append('subject','harbuckgroup.com inquiry from '+name);
@@ -1059,8 +1066,7 @@ if(form){form.addEventListener('submit',async e=>{
     fd.append('business',biz||'not given');
     fd.append('message',msg);
     const r=await fetch('https://api.web3forms.com/submit',{method:'POST',
-      headers:{Accept:'application/json'},
-      body:fd});
+      headers:{Accept:'application/json'},body:fd});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&j.success!==false){
       form.reset();fstate.className='fstate ok';
