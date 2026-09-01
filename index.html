@@ -1051,11 +1051,16 @@ if(form){form.addEventListener('submit',async e=>{
   if(form.querySelector('.hp').checked)return;
   fsend.disabled=true;fstate.className='fstate';fstate.textContent='Sending.';
   try{
+    const fd=new FormData();
+    fd.append('access_key','3164bd66-b603-40f3-a526-9420f3020940');
+    fd.append('subject','harbuckgroup.com inquiry from '+name);
+    fd.append('from_name','harbuckgroup.com');
+    fd.append('name',name);
+    fd.append('business',biz||'not given');
+    fd.append('message',msg);
     const r=await fetch('https://api.web3forms.com/submit',{method:'POST',
-      headers:{'Content-Type':'application/json',Accept:'application/json'},
-      body:JSON.stringify({access_key:'3164bd66-b603-40f3-a526-9420f3020940',
-        subject:'harbuckgroup.com inquiry from '+name,from_name:'harbuckgroup.com',
-        name:name,business:biz||'not given',message:msg})});
+      headers:{Accept:'application/json'},
+      body:fd});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&j.success!==false){
       form.reset();fstate.className='fstate ok';
