@@ -1006,8 +1006,19 @@ function renderInfo(d){
     ${d.shots?`<div class="strip">${d.shots.map(s=>`<figure><img src="${IMG[s[0]]}" alt="${s[1]}"><figcaption>${s[1]}</figcaption></figure>`).join('')}</div>`:''}
     <div class="acts"><a class="btn btn-solid ask" href="#contact">ASK FOR ONE LIKE THIS</a>${d.ext?`<a class="ext" href="${d.ext[1]}" target="_blank" rel="noopener">${d.ext[0]}</a>`:''}</div>`;
   info.querySelector('.close').addEventListener('click',()=>close());
-  info.querySelector('.ask').addEventListener('click',()=>{close();const ta=document.getElementById('m2');
-    if(ta){ta.value='I saw the '+d.name+' demo on your site. ';setTimeout(()=>ta.focus(),380);}});
+  /* This button used to just close the panel and rely on the page's generic
+     #contact anchor handler to scroll, but that handler fires on the SAME
+     click, in the SAME tick, before the panel's close animation has run —
+     meaning it tried to scroll while body scroll was still locked and Lenis
+     was still stopped, so the scroll silently did nothing. Fix: stop that
+     second handler from firing at all, and don't scroll until close()
+     confirms the panel is actually gone and scroll is unlocked again. */
+  info.querySelector('.ask').addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    const ta=document.getElementById('m2');
+    if(ta)ta.value='I saw the '+d.name+' demo on your site. ';
+    close(false,()=>{scrollToId('contact');setTimeout(()=>ta&&ta.focus(),1150);});
+  });
 }
 const inset=r=>`inset(${Math.max(0,r.top)}px ${Math.max(0,innerWidth-r.right)}px ${Math.max(0,innerHeight-r.bottom)}px ${Math.max(0,r.left)}px)`;
 function open(d,card,instant){
@@ -1024,12 +1035,12 @@ function open(d,card,instant){
   try{if(location.hash!=='#'+d.id)history.pushState({demo:d.id},'','#'+d.id);}catch(e){}
   panel.focus();
 }
-function close(fromPop){
+function close(fromPop,after){
   if(!current||closing)return;closing=true;
   const d=current,card=d.card,r=card.getBoundingClientRect();
   const finish=()=>{panel.classList.remove('open','ready');panel.style.clipPath='';card.classList.remove('hollow');
     d.stage.appendChild(d.scene.root);d.scene.setExpanded(false);current=null;closing=false;document.body.style.overflow='';if(window.__lenis)window.__lenis.start();
-    layout();card.focus();};
+    layout();card.focus();if(after)after();};
   backdrop.classList.remove('on');panel.classList.remove('ready');
   if(RM)finish();
   else{const a=panel.animate([{clipPath:'inset(0px)'},{clipPath:inset(r)}],
