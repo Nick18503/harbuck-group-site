@@ -75,6 +75,26 @@ header.hero{position:relative;padding:100px 0 30px;border-bottom:1px solid var(-
 footer a:hover,.email a:hover{color:var(--gold-hi)}
 
 section{padding:70px 0;border-bottom:1px solid var(--line-strong)}
+
+/* Lenis: minimal reset from Lenis's own docs. .lenis/.lenis-smooth are
+   added to <html> by the library itself once it initializes. */
+html.lenis{height:auto}
+html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:hidden}
+
+/* SEC 01-03: vertical scroll drives horizontal motion through a sticky
+   viewport. Height below is 3 panels x 100vh; JS turns scroll progress
+   through that distance into translateX on .hscroll-track. */
+.hscroll-wrap{position:relative;height:300vh}
+.hscroll-pin{position:sticky;top:0;height:100vh;overflow:hidden}
+.hscroll-track{display:flex;height:100%;width:300vw;will-change:transform}
+.hscroll-track>section{flex:0 0 100vw;width:100vw;height:100%;margin:0;
+  padding:0;border-bottom:none;border-right:1px solid var(--line-strong);
+  display:flex;align-items:center;overflow-y:auto}
+.hscroll-track>section>.wrap{width:100%;max-height:100%;padding:70px 24px}
+
 .sec-tab{display:inline-flex;align-items:center;gap:10px;font-size:11px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line-strong);padding:6px 12px;margin-bottom:30px}
 .sec-h{font-family:'Instrument Sans',sans-serif;font-weight:500;font-size:clamp(24px,3vw,36px);margin-bottom:40px;max-width:26ch}
 .sec-h .em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--gold-hi);font-weight:400}
@@ -439,6 +459,11 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
 @media (max-width:1200px) and (min-width:901px){:root{--card-w:392px;--card-h:280px}}
 @media (max-width:900px){
   .schem{grid-template-columns:1fr 1fr}
+  .hscroll-wrap{height:auto!important}
+  .hscroll-pin{position:static!important;height:auto!important;overflow:visible!important}
+  .hscroll-track{display:block!important;width:auto!important;height:auto!important;transform:none!important}
+  .hscroll-track>section{width:auto!important;height:auto!important;overflow-y:visible!important;
+    border-right:none!important;border-bottom:1px solid var(--line-strong)!important}
   .steps{flex-direction:column}
   .step{border-right:none;border-bottom:1px solid var(--line-strong)}
   .step:last-child{border-bottom:none}
@@ -458,7 +483,14 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
   .cr.x .grid{grid-template-columns:1fr}
   .cr.x .scan{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  .hscroll-wrap{height:auto!important}
+  .hscroll-pin{position:static!important;height:auto!important;overflow:visible!important}
+  .hscroll-track{display:block!important;width:auto!important;height:auto!important;transform:none!important}
+  .hscroll-track>section{width:auto!important;height:auto!important;overflow-y:visible!important;
+    border-right:none!important;border-bottom:1px solid var(--line-strong)!important}
+}
 </style>
 </head>
 <body>
@@ -476,7 +508,7 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
       <p class="prose">Harbuck Group designs and builds the tools your business runs on. Web platforms, iOS apps, and internal systems, specified around how you actually work.</p>
       <div class="hero-cta">
         <a class="btn btn-solid" href="#contact">SEND SPEC</a>
-        <a class="btn" href="#work">VIEW BUILDS</a>
+        <a class="btn" href="#caps">VIEW BUILDS</a>
       </div>
     </div>
     <div class="hero-work">
@@ -486,36 +518,44 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
   <div class="deck" id="deck" role="group" aria-label="Live demos" tabindex="0"></div>
 </header>
 
-<section id="caps"><div class="wrap">
-  <div class="sec-tab">SEC. 01 — FIELDS</div>
-  <h2 class="sec-h">What gets <span class="em">built</span> here</h2>
-  <div class="schem">
-    <div class="node"><div class="id">FIELD.01</div><h3>Web platforms</h3><p class="prose">Marketplaces, dashboards, portals, booking systems.</p></div>
-    <div class="node"><div class="id">FIELD.02</div><h3>iOS apps</h3><p class="prose">Native, App Store listing through backend.</p></div>
-    <div class="node"><div class="id">FIELD.03</div><h3>Internal systems</h3><p class="prose">CRMs, inventory, quoting, ops tools.</p></div>
-    <div class="node"><div class="id">FIELD.04</div><h3>Automation + AI</h3><p class="prose">Repetitive work handled by software.</p></div>
-  </div>
-</div></section>
+<div class="hscroll-wrap" id="hscrollWrap">
+  <div class="hscroll-pin">
+    <div class="hscroll-track" id="hscrollTrack">
 
-<section id="terms"><div class="wrap">
-  <div class="sec-tab">SEC. 02 — TERMS</div>
-  <h2 class="sec-h">How the work <span class="em">is handled</span></h2>
-  <div class="readout big">
-    <div><div class="k">Model</div><div class="v">Founder led</div><p class="prose">You talk to the person writing the code. No account managers, no handoff.</p></div>
-    <div><div class="k">Scope</div><div class="v">Full stack</div><p class="prose">Interface, server, database, deployment. One person owns the whole thing.</p></div>
-    <div><div class="k">Terms</div><div class="v">You own it</div><p class="prose">Code, accounts, and data are yours from day one. No lock-in, no hostage fees.</p></div>
-  </div>
-</div></section>
+      <section id="caps"><div class="wrap">
+        <div class="sec-tab">SEC. 01 — FIELDS</div>
+        <h2 class="sec-h">What gets <span class="em">built</span> here</h2>
+        <div class="schem">
+          <div class="node"><div class="id">FIELD.01</div><h3>Web platforms</h3><p class="prose">Marketplaces, dashboards, portals, booking systems.</p></div>
+          <div class="node"><div class="id">FIELD.02</div><h3>iOS apps</h3><p class="prose">Native, App Store listing through backend.</p></div>
+          <div class="node"><div class="id">FIELD.03</div><h3>Internal systems</h3><p class="prose">CRMs, inventory, quoting, ops tools.</p></div>
+          <div class="node"><div class="id">FIELD.04</div><h3>Automation + AI</h3><p class="prose">Repetitive work handled by software.</p></div>
+        </div>
+      </div></section>
 
-<section id="process"><div class="wrap">
-  <div class="sec-tab">SEC. 03 — PROCEDURE</div>
-  <h2 class="sec-h">Three steps, <span class="em">no ceremony</span></h2>
-  <div class="steps">
-    <div class="step"><div class="id">01 / TALK</div><h3>Talk</h3><p class="prose">Describe the problem. I ask until I understand it, then tell you honestly if it's worth building.</p></div>
-    <div class="step"><div class="id">02 / BUILD</div><h3>Build</h3><p class="prose">Real progress on a real link. Smallest working version ships first.</p></div>
-    <div class="step"><div class="id">03 / OWN</div><h3>Own it</h3><p class="prose">Code, accounts, and data are yours from day one.</p></div>
+      <section id="terms"><div class="wrap">
+        <div class="sec-tab">SEC. 02 — TERMS</div>
+        <h2 class="sec-h">How the work <span class="em">is handled</span></h2>
+        <div class="readout big">
+          <div><div class="k">Model</div><div class="v">Founder led</div><p class="prose">You talk to the person writing the code. No account managers, no handoff.</p></div>
+          <div><div class="k">Scope</div><div class="v">Full stack</div><p class="prose">Interface, server, database, deployment. One person owns the whole thing.</p></div>
+          <div><div class="k">Terms</div><div class="v">You own it</div><p class="prose">Code, accounts, and data are yours from day one. No lock-in, no hostage fees.</p></div>
+        </div>
+      </div></section>
+
+      <section id="process"><div class="wrap">
+        <div class="sec-tab">SEC. 03 — PROCEDURE</div>
+        <h2 class="sec-h">Three steps, <span class="em">no ceremony</span></h2>
+        <div class="steps">
+          <div class="step"><div class="id">01 / TALK</div><h3>Talk</h3><p class="prose">Describe the problem. I ask until I understand it, then tell you honestly if it's worth building.</p></div>
+          <div class="step"><div class="id">02 / BUILD</div><h3>Build</h3><p class="prose">Real progress on a real link. Smallest working version ships first.</p></div>
+          <div class="step"><div class="id">03 / OWN</div><h3>Own it</h3><p class="prose">Code, accounts, and data are yours from day one.</p></div>
+        </div>
+      </div></section>
+
+    </div>
   </div>
-</div></section>
+</div>
 
 <section id="contact" class="contact"><div class="wrap">
   <div class="terminal">
@@ -540,11 +580,12 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
 
 <div class="scanbar" id="scanbar"></div>
 <div class="backdrop" id="backdrop"></div>
-<div class="panel" id="panel" role="dialog" aria-modal="true" tabindex="-1">
+<div class="panel" id="panel" role="dialog" aria-modal="true" tabindex="-1" data-lenis-prevent>
   <div class="pstage" id="pstage"></div>
   <aside class="info" id="info"></aside>
 </div>
 
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
 <script>
 (function(){
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -731,7 +772,7 @@ class CRM extends Scene{
 /* ===== 04 JSP Naturals ===== */
 class JSP extends Scene{
   build(){const b=h('div','body');this.root.appendChild(b);
-    const lap=h('div','lap','<div class="vp"><img alt="jspnaturals.com, home through reviews"></div>');
+    const lap=h('div','lap','<div class="vp" data-lenis-prevent><img alt="jspnaturals.com, home through reviews"></div>');
     this.vp=lap.querySelector('.vp');this.img=lap.querySelector('img');this.img.src=IMG.jspTall;b.appendChild(lap);
     const c=this.ctl();const go=h('button','go','Scroll the store');go.addEventListener('click',()=>this.trigger());c.appendChild(go);
     c.appendChild(h('span','hint','or drag inside the screen'));}
@@ -927,8 +968,14 @@ function goTo(i){active=i;layout();}
 layout();
 
 setInterval(()=>{ if(!paused&&inView&&!current&&!RM&&!document.hidden)step(); },2200);
-['pointerenter','focusin'].forEach(ev=>deck.addEventListener(ev,()=>paused=true));
-['pointerleave','focusout'].forEach(ev=>deck.addEventListener(ev,()=>paused=false));
+/* Pause-on-hover/focus is a mouse and keyboard courtesy: it stops the deck
+   sliding out from under a pointer someone is about to click. On touch it
+   would instead mean a finger on the glass kills the cadence, which is the
+   opposite of what's wanted, so pointerType decides, not viewport width. */
+deck.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')paused=true;});
+deck.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')paused=false;});
+deck.addEventListener('focusin',()=>paused=true);
+deck.addEventListener('focusout',()=>paused=false);
 
 /* drag / swipe */
 let dragX=0,dragY=0,dragging=false,dragged=false;
@@ -965,6 +1012,7 @@ function open(d,card,instant){
   if(current)return;current=d;d.scene.pause();
   renderInfo(d);pstage.innerHTML='';pstage.appendChild(d.scene.root);
   panel.classList.add('open');document.body.style.overflow='hidden';backdrop.classList.add('on');
+  if(window.__lenis)window.__lenis.stop();
   d.scene.setExpanded(true);card.classList.add('hollow');
   const r=card.getBoundingClientRect();
   if(instant||RM){panel.style.clipPath='none';panel.classList.add('ready');}
@@ -978,7 +1026,7 @@ function close(fromPop){
   if(!current||closing)return;closing=true;
   const d=current,card=d.card,r=card.getBoundingClientRect();
   const finish=()=>{panel.classList.remove('open','ready');panel.style.clipPath='';card.classList.remove('hollow');
-    d.stage.appendChild(d.scene.root);d.scene.setExpanded(false);current=null;closing=false;document.body.style.overflow='';
+    d.stage.appendChild(d.scene.root);d.scene.setExpanded(false);current=null;closing=false;document.body.style.overflow='';if(window.__lenis)window.__lenis.start();
     layout();card.focus();};
   backdrop.classList.remove('on');panel.classList.remove('ready');
   if(RM)finish();
@@ -1034,6 +1082,61 @@ if(!RM){
   addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(paint);}},{passive:true});
   paint();
 }
+
+/* ===================================================================
+   Lenis smooth scroll + SEC 01-03 horizontal-scroll-on-vertical-input.
+   Kept as a self-contained block: if the CDN script fails to load, or
+   the person prefers reduced motion, everything below is skipped and
+   the page behaves as plain native scroll (CSS media query above
+   already flattens the hscroll layout in both those cases).
+   =================================================================== */
+const hwrap=document.getElementById('hscrollWrap'),
+      htrack=document.getElementById('hscrollTrack');
+const HS_IDS=['caps','terms','process'];
+let lenis=null;
+
+function hscrollRange(){
+  if(!hwrap)return null;
+  const top=hwrap.getBoundingClientRect().top+scrollY;
+  const total=hwrap.offsetHeight-innerHeight;
+  return total>0?{top,total}:null;
+}
+function hscrollPaint(){
+  if(RM||isMobile()||!hwrap)return;
+  const r=hscrollRange();if(!r)return;
+  const p=Math.min(1,Math.max(0,(scrollY-r.top)/r.total));
+  htrack.style.transform='translate3d(-'+(p*200)+'vw,0,0)';
+}
+function scrollToId(id){
+  const idx=HS_IDS.indexOf(id);
+  let y;
+  if(idx>-1&&!RM&&!isMobile()){
+    const r=hscrollRange();
+    y=r?r.top+(idx/(HS_IDS.length-1))*r.total:document.getElementById(id).getBoundingClientRect().top+scrollY;
+  }else{
+    const el=document.getElementById(id);if(!el)return;
+    y=el.getBoundingClientRect().top+scrollY;
+  }
+  if(lenis)lenis.scrollTo(y,{duration:1.1});else scrollTo({top:y,behavior:RM?'auto':'smooth'});
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]');if(!a)return;
+  const id=a.getAttribute('href').slice(1);if(!document.getElementById(id))return;
+  e.preventDefault();scrollToId(id);
+});
+
+if(!RM&&typeof Lenis!=='undefined'){
+  try{
+    lenis=new Lenis({smoothWheel:true,smoothTouch:false,lerp:0.1});
+    window.__lenis=lenis;
+    const raf=(time)=>{lenis.raf(time);requestAnimationFrame(raf);};
+    requestAnimationFrame(raf);
+    lenis.on('scroll',hscrollPaint);
+  }catch(e){lenis=null;}
+}
+addEventListener('scroll',hscrollPaint,{passive:true});
+addEventListener('resize',hscrollPaint);
+hscrollPaint();
 })();
 </script>
 </body>
