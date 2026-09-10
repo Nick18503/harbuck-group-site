@@ -55,6 +55,29 @@ nav{border-bottom:1px solid var(--line-strong);background:rgba(13,12,10,.9);posi
 
 header.hero{position:relative;padding:100px 0 30px;border-bottom:1px solid var(--line-strong)}
 .hero-copy{position:relative}
+
+.hero-photo{position:relative;width:100%;aspect-ratio:1536/1024;overflow:hidden;background:#0a0906}
+.hero-photo-stage{position:absolute;inset:-4%;width:108%;height:108%;will-change:transform;transition:transform .2s var(--ease)}
+.hero-photo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transform-origin:50% 50%;will-change:transform;animation:heroKenBurns 24s linear infinite alternate}
+@keyframes heroKenBurns{from{transform:scale(1)}to{transform:scale(1.06)}}
+.hero-photo-scrim{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(100deg,rgba(13,12,10,.86) 0%,rgba(13,12,10,.58) 28%,rgba(13,12,10,.18) 52%,rgba(13,12,10,0) 70%)}
+.hero-screen{position:absolute;left:44.9%;top:5.9%;width:39.7%;height:55.7%;overflow:hidden;
+  clip-path:polygon(3.3% 19.3%,100% 0%,94.8% 100%,0% 93.9%)}
+.hero-screen-inner{position:absolute;inset:0;background:linear-gradient(160deg,#17140d,#0a0906);
+  font-family:'Spline Sans Mono',monospace;display:flex;flex-direction:column}
+.hero-screen-bar{display:flex;align-items:center;gap:5px;padding:7px 9px;border-bottom:1px solid rgba(200,169,106,.25)}
+.hero-screen-bar i{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.55;display:block}
+.hero-screen-bar span{font-size:7px;letter-spacing:.1em;color:var(--muted);margin-left:4px;text-transform:uppercase}
+.hero-screen-body{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;padding:9px}
+.hero-screen-body .cell{border:1px solid rgba(200,169,106,.2);padding:6px 7px;display:flex;flex-direction:column;gap:4px}
+.hero-screen-body .cell b{font-size:9px;color:var(--gold-hi);font-family:'Instrument Serif',serif;font-weight:400}
+.hero-screen-body .cell span{font-size:6px;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+.hero-screen-body .cell .bar{height:3px;background:rgba(200,169,106,.18);margin-top:2px}
+.hero-screen-body .cell .bar i{display:block;height:100%;background:var(--gold)}
+
+.hero-copy-text{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;max-width:520px;padding:0 4px}
 .hero-logo{height:100px;width:auto;display:block;margin-bottom:28px}
 .nav-mark{height:30px;width:auto;display:block}
 .footer-mark{height:19px;width:auto;vertical-align:-5px;margin-right:3px}
@@ -471,6 +494,9 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
   .nav-links a{display:inline-block;padding:8px 0}
   .schem{grid-template-columns:1fr 1fr}
   .hero-logo{height:64px;margin-bottom:20px}
+  .hero-copy-text{position:static;max-width:none;padding:26px 0 0}
+  .hero-screen{display:none}
+  .hero-photo-scrim{background:linear-gradient(180deg,rgba(13,12,10,.35) 0%,rgba(13,12,10,.75) 100%)}
   .hscroll-wrap{height:auto!important}
   .hscroll-pin{position:static!important;height:auto!important;overflow:visible!important}
   .hscroll-track{display:block!important;width:auto!important;height:auto!important;transform:none!important}
@@ -530,13 +556,31 @@ footer{padding:26px 0;text-align:center;font-size:11px;color:var(--faint)}
 <header class="hero" id="top">
   <div class="wrap">
     <div class="hero-copy">
-      <img class="hero-logo" src="images/logo-mark.png" alt="Harbuck Group">
-      <div class="spec-line">DOC. 001 <b>/</b> CUSTOM SOFTWARE &amp; WEB DESIGN <b>/</b> ATLANTA, GA</div>
-      <h1>Software built for <span class="em">one</span> business. Yours.</h1>
-      <p class="prose">Harbuck Group designs and builds the tools your business runs on. Web platforms, iOS apps, and internal systems, specified around how you actually work.</p>
-      <div class="hero-cta">
-        <a class="btn btn-solid" href="#contact">SEND SPEC</a>
-        <a class="btn" href="#caps">VIEW BUILDS</a>
+      <div class="hero-photo" aria-hidden="true">
+        <div class="hero-photo-stage" id="heroPhotoStage">
+          <img class="hero-photo-img" src="images/generated/hero-desk-v2.webp" alt="" loading="eager" fetchpriority="high">
+          <div class="hero-screen">
+            <div class="hero-screen-inner">
+              <div class="hero-screen-bar"><i></i><i></i><i></i><span>build.harbuckgroup</span></div>
+              <div class="hero-screen-body">
+                <div class="cell"><b>Live</b><span>Uptime</span><div class="bar"><i style="width:96%"></i></div></div>
+                <div class="cell"><b>07</b><span>Active builds</span><div class="bar"><i style="width:70%"></i></div></div>
+                <div class="cell"><b>You</b><span>Own the code</span><div class="bar"><i style="width:100%"></i></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-photo-scrim"></div>
+      </div>
+      <div class="hero-copy-text">
+        <img class="hero-logo" src="images/logo-mark.png" alt="Harbuck Group">
+        <div class="spec-line">DOC. 001 <b>/</b> CUSTOM SOFTWARE &amp; WEB DESIGN <b>/</b> ATLANTA, GA</div>
+        <h1>Software built for <span class="em">one</span> business. Yours.</h1>
+        <p class="prose">Harbuck Group designs and builds the tools your business runs on. Web platforms, iOS apps, and internal systems, specified around how you actually work.</p>
+        <div class="hero-cta">
+          <a class="btn btn-solid" href="#contact">SEND SPEC</a>
+          <a class="btn" href="#caps">VIEW BUILDS</a>
+        </div>
       </div>
     </div>
     <div class="hero-work">
@@ -1196,6 +1240,24 @@ if(!RM&&typeof Lenis!=='undefined'){
 addEventListener('scroll',hscrollPaint,{passive:true});
 addEventListener('resize',hscrollPaint);
 hscrollPaint();
+})();
+</script>
+<script>
+(function(){
+const stage=document.getElementById('heroPhotoStage');
+if(!stage)return;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isDesktop=matchMedia('(hover:hover) and (pointer:fine)').matches;
+if(reduced||!isDesktop)return;
+const photo=stage.closest('.hero-photo');
+photo.addEventListener('mousemove',(e)=>{
+  const r=photo.getBoundingClientRect();
+  const dx=((e.clientX-r.left)/r.width-0.5)*2;
+  const dy=((e.clientY-r.top)/r.height-0.5)*2;
+  const rotateY=dx*3, rotateX=-dy*2, tx=dx*8, ty=dy*6;
+  stage.style.transform=`translate3d(${tx}px,${ty}px,0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
+photo.addEventListener('mouseleave',()=>{stage.style.transform='';});
 })();
 </script>
 </body>
